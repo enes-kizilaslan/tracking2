@@ -81,7 +81,7 @@ def make_predictions(
         'Duyusal': [],
         'Motor': [],
         'Dil': [],
-        'Iletisim': [],
+        'İletisim': [],
         'Ortak_Dikkat': [],
         'Otizm': [],
         'DEHB': [],
