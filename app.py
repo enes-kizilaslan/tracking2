@@ -105,7 +105,7 @@ def load_question_texts_local():
 question_texts = load_question_texts_local()
 
 if st.session_state.page == "form":
-    st.subheader("Lütfen aşağıdaki 95 soruyu cevaplayın")
+    st.subheader("Lütfen aşağıdaki 63 soruyu cevaplayın")
 
     if st.button("Rastgele Doldur"):
         for q in questions:
