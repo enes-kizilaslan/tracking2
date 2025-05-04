@@ -10,7 +10,7 @@ from utils import (
     load_expected_answers
 )
 
-# Sabit 95 soruluk liste
+# Sabit 63 soruluk liste
 def get_static_questions():
     return [
 'Q10',
