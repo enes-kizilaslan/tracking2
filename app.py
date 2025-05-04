@@ -10,72 +10,22 @@ from utils import (
     load_expected_answers
 )
 
+# 🔁 Hastalıklar için tüm sorular kullanılacağı için ek havuz yükleniyor
+def load_final_question_pool():
+    try:
+        with open("final_question_pool.txt", "r") as f:
+            return [line.strip() for line in f.readlines() if line.strip()]
+    except FileNotFoundError:
+        return []
+
 # Sabit 63 soruluk liste
 def get_static_questions():
     return [
-'Q10',
-'Q11',
-'Q113',
-'Q114',
-'Q117',
-'Q127',
-'Q128',
-'Q13',
-'Q135',
-'Q136',
-'Q137',
-'Q153',
-'Q154',
-'Q155',
-'Q162',
-'Q166',
-'Q171',
-'Q176',
-'Q198',
-'Q200',
-'Q204',
-'Q205',
-'Q217',
-'Q219',
-'Q221',
-'Q222',
-'Q227',
-'Q229',
-'Q23',
-'Q231',
-'Q232',
-'Q233',
-'Q234',
-'Q236',
-'Q241',
-'Q242',
-'Q243',
-'Q244',
-'Q247',
-'Q248',
-'Q249',
-'Q25',
-'Q252',
-'Q253',
-'Q26',
-'Q35',
-'Q39',
-'Q40',
-'Q44',
-'Q47',
-'Q51',
-'Q52',
-'Q53',
-'Q54',
-'Q56',
-'Q6',
-'Q64',
-'Q68',
-'Q70',
-'Q71',
-'Q74',
-'Q77',
-'Q81'
+'Q10','Q11','Q113','Q114','Q117','Q127','Q128','Q13','Q135','Q136','Q137','Q153','Q154','Q155',
+'Q162','Q166','Q171','Q176','Q198','Q200','Q204','Q205','Q217','Q219','Q221','Q222','Q227','Q229',
+'Q23','Q231','Q232','Q233','Q234','Q236','Q241','Q242','Q243','Q244','Q247','Q248','Q249','Q25',
+'Q252','Q253','Q26','Q35','Q39','Q40','Q44','Q47','Q51','Q52','Q53','Q54','Q56','Q6','Q64','Q68',
+'Q70','Q71','Q74','Q77','Q81'
     ]
 
 # Sayfa yapısı
@@ -135,7 +85,8 @@ elif st.session_state.page == "results":
         feature_lists = load_feature_lists()
         performances = load_model_performances()
         expected_answers = load_expected_answers()
-        input_data = prepare_input_data(st.session_state.answers, feature_lists)
+        final_pool = load_final_question_pool()  # ✅ final havuz çağrılıyor
+        input_data = prepare_input_data(st.session_state.answers, feature_lists, final_pool)  # ✅ eklendi
         results = make_predictions(models, input_data, performances, feature_lists, st.session_state.answers, expected_answers)
 
     st.subheader("Tahmin Sonuçları")
@@ -162,7 +113,7 @@ elif st.session_state.page == "results":
                     st.markdown(f"- **{soru_metni}**  \n"
                                 f"*Beklenen Cevap:* `{item['beklenen']}`   |   *Verilen Cevap:* `{item['verilen']}`")
 
-
     if st.button("⬅️ Başa Dön"):
         st.session_state.page = "form"
         st.experimental_rerun()
+
