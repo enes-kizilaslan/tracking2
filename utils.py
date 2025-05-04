@@ -46,24 +46,25 @@ def load_expected_answers(csv_file: str = "SorularFull.csv") -> Dict[str, str]:
         for idx, row in df.iterrows()
     }
 
-def prepare_input_data(answers: Dict[str, str], feature_lists: Dict[str, List[str]]) -> Dict[str, np.ndarray]:
+def prepare_input_data(answers: Dict[str, str], feature_lists: Dict[str, List[str]], final_pool: List[str] = None) -> Dict[str, np.ndarray]:
     # Eğer model bir hastalıkla ilgiliyse, tüm final soru havuzu kullanılacak
-    final_question_pool = []
-    try:
-        with open("final_question_pool.txt", "r") as f:
-            final_question_pool = [line.strip() for line in f if line.strip()]
-    except FileNotFoundError:
-        print("⚠️ final_question_pool.txt bulunamadı. Hastalık modelleri çalışmayabilir.")
+    if final_pool is None:
+        try:
+            with open("final_question_pool.txt", "r") as f:
+                final_pool = [line.strip() for line in f if line.strip()]
+        except FileNotFoundError:
+            final_pool = []
 
     input_data = {}
     for model_name, features in feature_lists.items():
         if any(x in model_name for x in ["Otizm", "DEHB", "Zihinsel", "Dil ve Konuşma", "Koordinasyon"]):
-            features = final_question_pool
+            features = final_pool
         row = []
         for f in features:
             row.append(1 if answers.get(f) == "Evet" else 0)
         input_data[model_name] = np.array(row).reshape(1, -1)
     return input_data
+
 
 def make_predictions(
     models: Dict[str, Any],
